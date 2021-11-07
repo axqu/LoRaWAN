@@ -65,6 +65,7 @@ def get_fig_4():
     duration = 0.256256
     simtime = 100
 
+
     G_sf7 = np.array(params['nDevices'])*duration/simtime
 
     duration = np.mean(campaign.get_results_as_numpy_array(params, sim_duration,
@@ -110,8 +111,3 @@ def get_fig_4():
     plt.title("Figure 4")
     plt.savefig('Fig4.png')
 
-if __name__ == '__main__':
-    sys.exit(get_fig_5())
-
-#if __name__ == "__main__":
-#    main()

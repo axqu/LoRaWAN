@@ -40,10 +40,12 @@ int nDevices = 200;
 int nGateways = 1;
 //double radius = 1000;
 double radius = 1000;
+//double simulationTime = 100;
 double simulationTime = 100;
 
 // Channel model
 bool realisticChannelModel = true;
+bool includeBuildings = false;
 
 int appPeriodSeconds = simulationTime;
 int transientPeriods = 0;
@@ -218,7 +220,6 @@ main (int argc, char *argv[])
   Ptr<ListPositionAllocator> allocator = CreateObject<ListPositionAllocator> ();
   // Make it so that nodes are at a certain height > 0
  allocator->Add (Vector (0.0, 0.0, 15.0));
-  //allocator->Add (Vector (0.0, 0.0, 50.0));
   mobility.SetPositionAllocator (allocator);
   mobility.Install (gateways);
 
@@ -227,47 +228,41 @@ main (int argc, char *argv[])
   macHelper.SetDeviceType (LorawanMacHelper::GW);
   helper.Install (phyHelper, macHelper, gateways);
 
- 
-
-
   /**********************
    *  Handle buildings  *
    **********************/
 
-  double xLength = 130;
-  double deltaX = 32;
-  double yLength = 64;
-  double deltaY = 17;
-  int gridWidth = 2 * radius / (xLength + deltaX);
-  int gridHeight = 2 * radius / (yLength + deltaY);
-  if (realisticChannelModel == false)
-    {
-      gridWidth = 0;
-      gridHeight = 0;
-    }
-  Ptr<GridBuildingAllocator> gridBuildingAllocator;
-  gridBuildingAllocator = CreateObject<GridBuildingAllocator> ();
-  gridBuildingAllocator->SetAttribute ("GridWidth", UintegerValue (gridWidth));
-  gridBuildingAllocator->SetAttribute ("LengthX", DoubleValue (xLength));
-  gridBuildingAllocator->SetAttribute ("LengthY", DoubleValue (yLength));
-  gridBuildingAllocator->SetAttribute ("DeltaX", DoubleValue (deltaX));
-  gridBuildingAllocator->SetAttribute ("DeltaY", DoubleValue (deltaY));
-  gridBuildingAllocator->SetAttribute ("Height", DoubleValue (6));
-  gridBuildingAllocator->SetBuildingAttribute ("NRoomsX", UintegerValue (2));
-  gridBuildingAllocator->SetBuildingAttribute ("NRoomsY", UintegerValue (4));
-  gridBuildingAllocator->SetBuildingAttribute ("NFloors", UintegerValue (2));
-  gridBuildingAllocator->SetAttribute (
-      "MinX", DoubleValue (-gridWidth * (xLength + deltaX) / 2 + deltaX / 2));
-  gridBuildingAllocator->SetAttribute (
-      "MinY", DoubleValue (-gridHeight * (yLength + deltaY) / 2 + deltaY / 2));
-  BuildingContainer bContainer = gridBuildingAllocator->Create (gridWidth * gridHeight);
+      double xLength = 130;
+      double deltaX = 32;
+      double yLength = 64;
+      double deltaY = 17;
+      int gridWidth = 2 * radius / (xLength + deltaX);
+      int gridHeight = 2 * radius / (yLength + deltaY);
+      //if (realisticChannelModel == false)
+      if (includeBuildings == false)
+        {
+          gridWidth = 0;
+          gridHeight = 0;
+        }
+      Ptr<GridBuildingAllocator> gridBuildingAllocator;
+      gridBuildingAllocator = CreateObject<GridBuildingAllocator> ();
+      gridBuildingAllocator->SetAttribute ("GridWidth", UintegerValue (gridWidth));
+      gridBuildingAllocator->SetAttribute ("LengthX", DoubleValue (xLength));
+      gridBuildingAllocator->SetAttribute ("LengthY", DoubleValue (yLength));
+      gridBuildingAllocator->SetAttribute ("DeltaX", DoubleValue (deltaX));
+      gridBuildingAllocator->SetAttribute ("DeltaY", DoubleValue (deltaY));
+      gridBuildingAllocator->SetAttribute ("Height", DoubleValue (6));
+      gridBuildingAllocator->SetBuildingAttribute ("NRoomsX", UintegerValue (2));
+      gridBuildingAllocator->SetBuildingAttribute ("NRoomsY", UintegerValue (4));
+      gridBuildingAllocator->SetBuildingAttribute ("NFloors", UintegerValue (2));
+      gridBuildingAllocator->SetAttribute (
+          "MinX", DoubleValue (-gridWidth * (xLength + deltaX) / 2 + deltaX / 2));
+      gridBuildingAllocator->SetAttribute (
+          "MinY", DoubleValue (-gridHeight * (yLength + deltaY) / 2 + deltaY / 2));
+      BuildingContainer bContainer = gridBuildingAllocator->Create (gridWidth * gridHeight);
 
-  BuildingsHelper::Install (endDevices);
-  BuildingsHelper::Install (gateways);
-
-
- 
-
+      BuildingsHelper::Install (endDevices);
+      BuildingsHelper::Install (gateways);
 
   /**********************************************
    *  Set up the end device's spreading factor  *
@@ -280,7 +275,8 @@ main (int argc, char *argv[])
     {
       std::ofstream myfile;
       myfile.open ("/home/steven/Project/ns-3/src/lorawan/examples/endDevices.dat");
-      std::vector<Ptr<Building>>::const_iterator it;
+      //std::vector<Ptr<Building>>::const_iterator it;
+      std::vector<Ptr<Node>>::const_iterator it;
       for (NodeContainer::Iterator j = endDevices.Begin (); j != endDevices.End (); ++j)
         {
           
