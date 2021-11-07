@@ -61,6 +61,8 @@ public:
    */
   void SetPeriod (Time period);
 
+  void SetRealisticChannelModel (bool val);
+
   void SetPacketSizeRandomVariable (Ptr <RandomVariableStream> rv);
 
   void SetPacketSize (uint8_t size);
@@ -81,6 +83,11 @@ private:
   Ptr<RandomVariableStream> m_pktSizeRV; // whether or not a random component is added to the packet size
 
   uint8_t m_pktSize; // the packet size.
+
+    /**
+   * If using a realisitc channel model
+   */
+  bool m_realisticChannelModel;
 
 };
 

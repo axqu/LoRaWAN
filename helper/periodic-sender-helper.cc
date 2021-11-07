@@ -48,6 +48,7 @@ PeriodicSenderHelper::PeriodicSenderHelper ()
 
   m_pktSize = 10;
   m_pktSizeRV = 0;
+  m_realisticChannelModel = false;
 }
 
 PeriodicSenderHelper::~PeriodicSenderHelper ()
@@ -125,6 +126,7 @@ PeriodicSenderHelper::InstallPriv (Ptr<Node> node) const
       app->SetPacketSizeRandomVariable (m_pktSizeRV);
     }
 
+  app->SetRealisticChannelModel (m_realisticChannelModel);
   app->SetNode (node);
   node->AddApplication (app);
 
@@ -135,6 +137,12 @@ void
 PeriodicSenderHelper::SetPeriod (Time period)
 {
   m_period = period;
+}
+
+void
+PeriodicSenderHelper::SetRealisticChannelModel (bool val)
+{
+  m_realisticChannelModel = val;
 }
 
 void

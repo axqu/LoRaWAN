@@ -57,7 +57,8 @@ PeriodicSender::PeriodicSender ()
   : m_interval (Seconds (10)),
   m_initialDelay (Seconds (1)),
   m_basePktSize (10),
-  m_pktSizeRV (0)
+  m_pktSizeRV (0),
+  m_realisticChannelModel(true)
 
 {
   NS_LOG_FUNCTION_NOARGS ();
@@ -103,6 +104,11 @@ PeriodicSender::SetPacketSize (uint8_t size)
   m_basePktSize = size;
 }
 
+void
+PeriodicSender::SetRealisticChannelModel (bool val)
+{
+  m_realisticChannelModel = val;
+}
 
 void
 PeriodicSender::SendPacket (void)
@@ -121,8 +127,7 @@ PeriodicSender::SendPacket (void)
   //uint8_t header_size = 8;
   //uint8_t ratio = 150/230;
 
-
- // std::vector<uint32_t>{59, 59, 59, 123, 230, 230, 230, 230});
+  Ptr<Packet> packet;
 
  /* 
  Data Rate -> Max Packet size (minus header size of 8)
@@ -133,56 +138,58 @@ PeriodicSender::SendPacket (void)
  4 -> 222
  5 -> 222
  */
+  if(m_realisticChannelModel)
+  {
+      if(data_rate == 5)
+      {
+        m_basePktSize = 222;
+      }
+      else if(data_rate == 4)
+      {
+        m_basePktSize = 222;
+      }
+      else if(data_rate == 3)
+      {
+        m_basePktSize = 115;
+      }
+      else if(data_rate == 2)
+      {
+        m_basePktSize = 51;
+      }
+      else if(data_rate == 1)
+      {
+        m_basePktSize = 51;
+      }
+      else if(data_rate == 0)
+      {
+        m_basePktSize = 51;
+      }
+      else
+      {
+        m_basePktSize = 150;
+      }
 
-  if(data_rate == 5)
-  {
-    m_basePktSize = 222;
-  }
-  else if(data_rate == 4)
-  {
-    m_basePktSize = 222;
-  }
-  else if(data_rate == 3)
-  {
-    m_basePktSize = 115;
-  }
-  else if(data_rate == 2)
-  {
-    m_basePktSize = 51;
-  }
-  else if(data_rate == 1)
-  {
-    m_basePktSize = 51;
-  }
-  else if(data_rate == 0)
-  {
-    m_basePktSize = 51;
-  }
-  else
-  {
-    m_basePktSize = 150;
-  }
+      m_basePktSize = 150;
 
-  //m_basePktSize = 51;
-
-  //std::cout << "m_basePktSize: " << unsigned(m_basePktSize)  << std::endl;
-  Ptr<Packet> packet;
-  packet = Create<Packet> (m_basePktSize);
-
-  // Create and send a new packet
- /* 
-  if (m_pktSizeRV)
-    {
-      int randomsize = m_pktSizeRV->GetInteger ();
-      packet = Create<Packet> (m_basePktSize + randomsize);
-    }
-  else
-    {
       packet = Create<Packet> (m_basePktSize);
-    }
-    */
-  m_mac->Send (packet);
+  }
+  else
+  {
+        // Create and send a new packet
 
+      if (m_pktSizeRV)
+        {
+          int randomsize = m_pktSizeRV->GetInteger ();
+          packet = Create<Packet> (m_basePktSize + randomsize);
+        }
+      else
+        {
+          packet = Create<Packet> (m_basePktSize);
+        }
+    
+  }
+
+  m_mac->Send (packet);
   // Schedule the next SendPacket event
   m_sendEvent = Simulator::Schedule (m_interval, &PeriodicSender::SendPacket,
                                      this);
