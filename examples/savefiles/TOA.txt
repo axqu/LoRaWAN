@@ -1,0 +1,5 @@
+Waf: Entering directory `/home/steven/Project/ns-3/build'
+Waf: Leaving directory `/home/steven/Project/ns-3/build'
+Build commands will be stored in build/compile_commands.json
+'build' finished successfully (0.735s)
+200 65 65 70 0 0 
