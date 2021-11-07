@@ -81,12 +81,10 @@ SimpleEndDeviceLoraPhy::Send (Ptr<Packet> packet, LoraTxParameters txParams,
 
   // Send the packet over the channel
   NS_LOG_INFO ("Sending the packet in the channel");
-  
-  //if(txParams.sf != 12)
-  //{
-     NS_LOG_INFO ("Sending packet");
-    m_channel->Send (this, packet, txPowerDbm, txParams, duration, frequencyMHz);
-  //}
+
+  NS_LOG_INFO ("Sending packet");
+  m_channel->Send (this, packet, txPowerDbm, txParams, duration, frequencyMHz);
+ 
   
 
   // Schedule the switch back to STANDBY mode.

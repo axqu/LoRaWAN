@@ -22,20 +22,23 @@ def get_psucc(result):
         return outcomes[1]/outcomes[0]
 
 def get_fig_3():
-    print("fig_3")
+    print("Figure 3")
 
     # Create our SEM campaign
     ns_3_dir = '../../../'
     #script = 'aloha-throughput'
     script = 'figure3'
-    results_dir = 'aloha-results'
+    results_dir = 'figure3-results'
 
     # DR5/SF7. Max Packet size: Not Defined
     params = {
-        'nDevices': list(np.logspace(0, 3, num=100)),
+        'nDevices': list(np.logspace(0, 3, num=50)),
     }
     runs = 50
 
+    print("Start Campaign")
+    print("runs: ", runs)
+    print("devices: ", len(params['nDevices']))
     campaign = sem.CampaignManager.new(ns_3_dir, script, results_dir,
                                    check_repo=False, overwrite=True)
     # Run simulations with the above parameter space
@@ -54,7 +57,9 @@ def get_fig_3():
 
     plt.plot(G, S)
     plt.plot(G, S_theory, '--')
+    plt.grid()
     plt.legend(["LoRaWAN module", "Theory"])
     #plt.show()
-    print("plot Fig3")
+    print("Plotting Figure 3")
+    plt.title("Figure 3")
     plt.savefig('Fig3.png')

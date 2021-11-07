@@ -117,14 +117,10 @@ PeriodicSender::SendPacket (void)
 
   //std::cout << "GetDataRate(): " << unsigned(mac -> GetDataRate()) << " ";
 
-  uint8_t data_rate = mac -> GetDataRate();
-  //uint8_t header_size = 8;
-  //uint8_t ratio = 150/230;
-
+  //uint8_t data_rate = mac -> GetDataRate();
 
  // std::vector<uint32_t>{59, 59, 59, 123, 230, 230, 230, 230});
- 
-
+/*
   if(data_rate == 5)
   {
     m_basePktSize = 150;
@@ -155,13 +151,13 @@ PeriodicSender::SendPacket (void)
   }
 
   m_basePktSize = 51;
+  */
 
   //std::cout << "m_basePktSize: " << unsigned(m_basePktSize)  << std::endl;
   Ptr<Packet> packet;
   packet = Create<Packet> (m_basePktSize);
 
   // Create and send a new packet
- /* 
   if (m_pktSizeRV)
     {
       int randomsize = m_pktSizeRV->GetInteger ();
@@ -171,7 +167,7 @@ PeriodicSender::SendPacket (void)
     {
       packet = Create<Packet> (m_basePktSize);
     }
-    */
+    
   m_mac->Send (packet);
 
   // Schedule the next SendPacket event
