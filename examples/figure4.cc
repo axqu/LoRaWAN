@@ -3,7 +3,7 @@
  * devices. The metric of interest for this script is the throughput of the
  * network.
  */
-
+#include "/home/steven/Project/ns-3/src/lorawan/model/lora-total-duration.h"
 #include "ns3/end-device-lora-phy.h"
 #include "ns3/gateway-lora-phy.h"
 #include "ns3/end-device-lorawan-mac.h"
@@ -32,13 +32,14 @@
 using namespace ns3;
 using namespace lorawan;
 
-NS_LOG_COMPONENT_DEFINE ("figure4");
+NS_LOG_COMPONENT_DEFINE ("figure5");
 
 // Network settings
-int nDevices = 10;
+//int nDevices = 5853;
+int nDevices = 200;
 int nGateways = 1;
 //double radius = 1000;
-double radius = 6400;
+double radius = 1000;
 double simulationTime = 100;
 
 // Channel model
@@ -47,7 +48,7 @@ bool realisticChannelModel = true;
 int appPeriodSeconds = simulationTime;
 int transientPeriods = 0;
 
-int packetSize = 150;
+int packetSize = 23;
 
 // Output control
 bool print = false;
@@ -65,36 +66,38 @@ main (int argc, char *argv[])
 
 
   // Set up logging
-  LogComponentEnable ("figure4", LOG_LEVEL_ALL);
-    // Set up logging
+  LogComponentEnable ("figure5", LOG_LEVEL_ALL);
+  // Set up logging
   //LogComponentEnable ("AlohaThroughput", LOG_LEVEL_ALL);
   //LogComponentEnable ("Simulator", LOG_LEVEL_ALL);
   //LogComponentEnable ("GatewayLorawanMac", LOG_LEVEL_ALL);
   // LogComponentEnable("LoraFrameHeader", LOG_LEVEL_ALL);
-//LogComponentEnable("LorawanMacHeader", LOG_LEVEL_ALL);
+  //LogComponentEnable("LorawanMacHeader", LOG_LEVEL_ALL);
   // LogComponentEnable("MacCommand", LOG_LEVEL_ALL);
   // LogComponentEnable("GatewayLoraPhy", LOG_LEVEL_ALL);
-//LogComponentEnable("LoraPhy", LOG_LEVEL_ALL);
-//LogComponentEnable("LoraChannel", LOG_LEVEL_ALL);
-  //LogComponentEnable("SimpleEndDeviceLoraPhy", LOG_LEVEL_ALL);
-//LogComponentEnable("EndDeviceLoraPhy", LOG_LEVEL_ALL);
- //LogComponentEnable("LogicalLoraChannelHelper", LOG_LEVEL_ALL);
-//LogComponentEnable("LorawanMacHelper", LOG_LEVEL_ALL);
-//LogComponentEnable ("EndDeviceLorawanMac", LOG_LEVEL_ALL);
-//LogComponentEnable ("ClassAEndDeviceLorawanMac", LOG_LEVEL_ALL);
+  //LogComponentEnable("LoraPhy", LOG_LEVEL_ALL);
+  //LogComponentEnable("LoraChannel", LOG_LEVEL_ALL);
+  // LogComponentEnable("SimpleEndDeviceLoraPhy", LOG_LEVEL_ALL);
+  //LogComponentEnable("EndDeviceLoraPhy", LOG_LEVEL_ALL);
+  //LogComponentEnable("LogicalLoraChannelHelper", LOG_LEVEL_ALL);
+  //LogComponentEnable("LorawanMacHelper", LOG_LEVEL_ALL);
+  //LogComponentEnable ("EndDeviceLorawanMac", LOG_LEVEL_ALL);
+  //LogComponentEnable ("ClassAEndDeviceLorawanMac", LOG_LEVEL_ALL);
   // LogComponentEnable ("OneShotSender", LOG_LEVEL_ALL);
   // LogComponentEnable("PointToPointNetDevice", LOG_LEVEL_ALL);
   // LogComponentEnable ("Forwarder", LOG_LEVEL_ALL);
   // LogComponentEnable ("OneShotSender", LOG_LEVEL_ALL);
-//LogComponentEnable ("DeviceStatus", LOG_LEVEL_ALL);
+  //LogComponentEnable ("DeviceStatus", LOG_LEVEL_ALL);
   // LogComponentEnable ("GatewayStatus", LOG_LEVEL_ALL);
-//LogComponentEnable ("PropagationLossModel", LOG_LEVEL_ALL);
-//LogComponentEnable ("BuildingPenetrationLoss", LOG_LEVEL_ALL);
+  //LogComponentEnable ("PropagationLossModel", LOG_LEVEL_ALL);
+  //LogComponentEnable ("BuildingPenetrationLoss", LOG_LEVEL_ALL);
 
-//LogComponentEnable ("LoraPacketTracker", LOG_LEVEL_ALL);
+  //LogComponentEnable ("LoraPacketTracker", LOG_LEVEL_ALL);
 
 
   // Default matrix is goursaud
+  //Config::SetDefault ("ns3::EndDeviceLorawanMac::DataRate", UintegerValue (5));
+
  //LoraInterferenceHelper::collisionMatrix = LoraInterferenceHelper::ALOHA;
  LoraInterferenceHelper::collisionMatrix = LoraInterferenceHelper::GOURSAUD;
 
@@ -262,35 +265,44 @@ main (int argc, char *argv[])
   BuildingsHelper::Install (endDevices);
   BuildingsHelper::Install (gateways);
 
-  // Print the buildings
-  if (print)
-    {
-      std::ofstream myfile;
-      myfile.open ("buildings.txt");
-      std::vector<Ptr<Building>>::const_iterator it;
-      int j = 1;
-      for (it = bContainer.Begin (); it != bContainer.End (); ++it, ++j)
-        {
-          Box boundaries = (*it)->GetBoundaries ();
-          myfile << "set object " << j << " rect from " << boundaries.xMin << "," << boundaries.yMin
-                << " to " << boundaries.xMax << "," << boundaries.yMax << std::endl;
-        }
-      myfile.close ();
-    }
+
  
 
 
   /**********************************************
    *  Set up the end device's spreading factor  *
    **********************************************/
+   
   std::vector<int> sfQuantity (6);
   sfQuantity = macHelper.SetSpreadingFactorsUp (endDevices, gateways, channel);
 
-  //for(std::vector<int>::iterator it = sfQuantity.begin(); it != sfQuantity.end(); ++it)
-  //{
-     // std::cout << *it << std::endl;
-  //}
+  if (print)
+    {
+      std::ofstream myfile;
+      myfile.open ("/home/steven/Project/ns-3/src/lorawan/examples/endDevices.dat");
+      std::vector<Ptr<Building>>::const_iterator it;
+      for (NodeContainer::Iterator j = endDevices.Begin (); j != endDevices.End (); ++j)
+        {
+          
+          Ptr<Node> object = *j;
+          Ptr<MobilityModel> mobility = object->GetObject<MobilityModel> ();
+          NS_ASSERT (mobility != 0);
+          Vector position = mobility->GetPosition ();
+          
 
+          Ptr<NetDevice> netDevice = object->GetDevice (0);
+          Ptr<LoraNetDevice> loraNetDevice = netDevice->GetObject<LoraNetDevice> ();
+          NS_ASSERT (loraNetDevice != 0);
+
+          Ptr<EndDeviceLorawanMac> mac = loraNetDevice->GetMac ()->GetObject<EndDeviceLorawanMac> ();
+          int sf = int(mac->GetDataRate ());
+
+          myfile << position.x << " " << position.y  << " " << sf << std::endl;
+
+        }
+
+      myfile.close ();
+    }
 
 
   NS_LOG_DEBUG ("Completed configuration");
@@ -343,18 +355,39 @@ main (int argc, char *argv[])
   /////////////////////////////
   NS_LOG_INFO ("Computing performance metrics...");
 
-  LoraPacketTracker &tracker = helper.GetPacketTracker ();
+  LoraPacketTracker &tracker = helper.GetPacketTracker ();  
+
+ // std::cout << tracker.PrintPhyPacketsPerGw (Seconds (0), appStopTime + Hours (1), nDevices) << std::endl;
+
+  std::vector<int> packetresults (6);
+  packetresults = tracker.CountPhyPacketsPerGw(Seconds (0), appStopTime + Hours (1), nDevices);
+
+    std::string output ("");
+    for (int i = 0; i < 6; ++i)
+    {
+      output += std::to_string (packetresults.at (i)) + " ";
+    }
 
   //Time t = channel -> getTotalDuration();
 
-  //double t = channel -> getTotalDuration().GetSeconds();
-
+  double t = channel -> getTotalDuration().GetSeconds();
   
+  //double G = nDevices * (0.256256/simulationTime);
+  double G = t / simulationTime;
+ 
 
-  std::cout << tracker.PrintPhyPacketsPerGw (Seconds (0), appStopTime + Hours (1), nDevices)
-            << 1 << std::endl;
-
-  //std::cout << t << std::endl;
+  // G = for all packets, sum: (time packets occupy channel / total time of simulation)
+  //double G =  t.GetSeconds() / simulationTime;
+  //S = G * (number of packets recieved at GW / number of packets sent)
+  double S = G * packetresults.at (1) / packetresults.at (0);
+  double S_theory = G * exp(-2*G) ;
+  
+  //std::cout << "output results: " << output << "  total duration: " << t << std::endl;
+  std::cout << nDevices ;
+  std::cout << " " << G;
+  std::cout << " " << S_theory;
+  std::cout << " " << S;
+  std::cout << " " << t << std::endl;
 
   return 0;
 }

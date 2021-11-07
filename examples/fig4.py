@@ -1,56 +1,32 @@
-import sem
 import sys
+import sem
 import numpy as np
 import matplotlib.pyplot as plt
-import matplotlib.ticker as ticker
-import json
 
-def get_elapsedtime(result):
-#    """
-#    Extract the probability of success from the simulation output
-#    """
+
+def sim_duration(result):
+    print(result)
+    #outcomes = [float(a) for a in result['meta']['elapsed_time']]  
+    outcomes = result['meta']['elapsed_time']  
+    #print(outcomes)
+    return outcomes
+
+def G_psucc(result):
+    outcomes = [float(a) for a in result['output']['stdout'].split()]    
+    return outcomes[1]
+
+def Stheory_psucc(result):
     #print(result)
-    #return 0
-    #f = open("./savefiles/fig3results.txt", "a")
-    #f.write(json.dumps(result))
-    #f.close()
-    print(result['meta']['elapsed_time'])
-    #outcomes = [float(a) for a in result['meta']['elapsed_time']]
-    #print(outcomes[0])
-    return result['meta']['elapsed_time']
+    outcomes = [float(a) for a in result['output']['stdout'].split()]    
+    return outcomes[2]
 
+def S_psucc(result):
+    outcomes = [float(a) for a in result['output']['stdout'].split()]    
+    return outcomes[3]
 
-def get_prob_tp(result):
-#    """
-#    Extract the probability of success from the simulation output
-#    """
-    #print(result)
-    #return 0
-    #f = open("./savefiles/fig3results.txt", "a")
-    #f.write(json.dumps(result))
-    #f.close()
-    outcomes = [float(a) for a in result['output']['stdout'].split()]
-    #print(outcomes[6])
-    if outcomes[6] == 0:
-        return 0
-    else:
-        return outcomes[6]
-
-def get_psucc(result):
-#    """
-#    Extract the probability of success from the simulation output
-#    """
-    #print(result)
-    #return 0
-    #f = open("./savefiles/fig3results.txt", "a")
-    #f.write(json.dumps(result))
-    #f.close()
-    outcomes = [float(a) for a in result['output']['stdout'].split()]
-    #print(outcomes[6])
-    if outcomes[0] == 0:
-        return 0
-    else:
-        return outcomes[1]/outcomes[0]
+#def G_psucc(result):
+#    outcomes = [float(a) for a in result['output']['stdout'].split()]    
+#    return outcomes[3]
 
 def get_fig_4():
     print("fig_4")
@@ -67,11 +43,11 @@ def get_fig_4():
     ns_3_dir = '../../../'
     #script = 'aloha-throughput'
     script = 'figure4'
-    results_dir = 'aloha-results'
+    results_dir = 'figure4-results'
 
     params = {
-    #'nDevices': list(np.logspace(0.0, 3.0, num=50, endpoint=True))
-    'nDevices': list(np.logspace(0.0, 4.136, num=50, endpoint=True)),
+    'nDevices': list(np.logspace(0.0, 3.0, num=50, endpoint=True))
+    #'nDevices': [100, 200, 500, 1000, 2000, 3000]
     #'DR': 0,
     #'packetSize': 150
     }
@@ -86,62 +62,56 @@ def get_fig_4():
     campaign.run_missing_simulations(params, runs)
 
     #duration of SF7 message for fixed packet length
-    #duration = 0.256256
     duration = 0.256256
     simtime = 100
-    #print("nDevices:")
-    #print(params['nDevices'])
-    G = np.array(params['nDevices'])*duration/simtime
 
-    print("G:")
-    print(G)
+    G_sf7 = np.array(params['nDevices'])*duration/simtime
 
-    #etprobs = np.mean(campaign.get_results_as_numpy_array(params, get_elapsedtime,
-    #                                                        runs),
-    #                    axis=-1).squeeze()
-    #print("etprobs:")
-    #print(etprobs)
-
-    #tpprobs = np.mean(campaign.get_results_as_numpy_array(params, get_prob_tp,
-    #                                                        runs),
-    #                    axis=-1).squeeze()
-    #print("tpprobs:")
-    #print(tpprobs)
-
-    #print("tpprobs/100:")
-    #print(tpprobs/100)
-
-    succprobs = np.mean(campaign.get_results_as_numpy_array(params, get_psucc,
+    duration = np.mean(campaign.get_results_as_numpy_array(params, sim_duration,
                                                             runs),
                         axis=-1).squeeze()
 
-    #print("succprobs:")
+    #G = np.array(params['nDevices'])*duration
+    #G = duration
+    #print(G)
+
+    S_theory = np.mean(campaign.get_results_as_numpy_array(params, Stheory_psucc,
+                                                            runs),
+                        axis=-1).squeeze()
+
+    #G_theory = np.mean(campaign.get_results_as_numpy_array(params, Gtheory_psucc,
+    #                                                    runs),
+    #                axis=-1).squeeze()
+
+    S = np.mean(campaign.get_results_as_numpy_array(params, S_psucc,
+                                                            runs),
+                        axis=-1).squeeze()
+
+    G = np.mean(campaign.get_results_as_numpy_array(params, G_psucc,
+                                                       runs),
+                    axis=-1).squeeze()
+
     #print(succprobs)
+    #S = np.multiply(succprobs_theory, G)
+    S_sf7 = np.multiply(G_sf7, np.exp(-2*G_sf7))
 
-    #E = np.multiply(succprobs, etprobs)
-
-    #T = np.multiply(succprobs, tpprobs/100)
-
-    S = np.multiply(succprobs, G)
-    S_theory = np.multiply(G, np.exp(-2*G))
-
-    #print("T:")
-    #print(T)
-
-    #print("S:")
-    #print(S)
-
-    #plt.plot(etprobs, E)
-    #plt.plot(tpprobs/100, T)
-    plt.plot(G, S)
-    plt.plot(G, S_theory, '--')
-    plt.legend(["All SF", "Theory"])
-    plt.title("r=6400");
+    #plt.plot(G, S)
+    plt.plot(G_sf7, S_sf7, 'b')
+    plt.plot(G, S, 'm')
+    plt.plot(G, S_theory, 'g--')
+    plt.legend(["G_sf7", "All SF", "Theory (SF7 only)"])
     #plt.show()
+
     plt.grid()
     #plt.ylim([0,0.35])
-    plt.xlim([0,3.5])
+    #plt.xlim([0,3.5])
 
-    print("plot Fig4")
-    plt.savefig('Fig4a.png')
+    print("Plotting Figure 4")
+    plt.title("Figure 4")
+    plt.savefig('Fig4.png')
 
+if __name__ == '__main__':
+    sys.exit(get_fig_5())
+
+#if __name__ == "__main__":
+#    main()

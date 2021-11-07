@@ -123,15 +123,24 @@ PeriodicSender::SendPacket (void)
 
 
  // std::vector<uint32_t>{59, 59, 59, 123, 230, 230, 230, 230});
- 
+
+ /* 
+ Data Rate -> Max Packet size (minus header size of 8)
+ 0 -> 51
+ 1 -> 51
+ 2 -> 51
+ 3 -> 115
+ 4 -> 222
+ 5 -> 222
+ */
 
   if(data_rate == 5)
   {
-    m_basePktSize = 150;
+    m_basePktSize = 222;
   }
   else if(data_rate == 4)
   {
-    m_basePktSize = 150;
+    m_basePktSize = 222;
   }
   else if(data_rate == 3)
   {
@@ -139,11 +148,11 @@ PeriodicSender::SendPacket (void)
   }
   else if(data_rate == 2)
   {
-    m_basePktSize = 20;
+    m_basePktSize = 51;
   }
   else if(data_rate == 1)
   {
-    m_basePktSize = 58;
+    m_basePktSize = 51;
   }
   else if(data_rate == 0)
   {
@@ -154,7 +163,7 @@ PeriodicSender::SendPacket (void)
     m_basePktSize = 150;
   }
 
-  m_basePktSize = 51;
+  //m_basePktSize = 51;
 
   //std::cout << "m_basePktSize: " << unsigned(m_basePktSize)  << std::endl;
   Ptr<Packet> packet;
