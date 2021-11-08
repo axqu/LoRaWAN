@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 def sim_duration(result):
-    print(result)
+    #print(result)
     #outcomes = [float(a) for a in result['meta']['elapsed_time']]  
     outcomes = result['meta']['elapsed_time']  
     #print(outcomes)
@@ -59,9 +59,9 @@ def runSimulation(runs):
     # Run simulations with the above parameter space
     campaign.run_missing_simulations(params, runs)
 
-    S_theory = np.mean(campaign.get_results_as_numpy_array(params, Stheory_psucc,
-                                                            runs),
-                        axis=-1).squeeze()
+    #S_theory = np.mean(campaign.get_results_as_numpy_array(params, Stheory_psucc,
+    #                                                        runs),
+    #                    axis=-1).squeeze()
 
     S = np.mean(campaign.get_results_as_numpy_array(params, S_psucc,
                                                             runs),
