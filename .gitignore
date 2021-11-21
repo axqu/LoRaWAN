@@ -1,3 +1,6 @@
 /.dir-locals.el
-*.png
 *.dat
+examples/aloha-results/**
+examples/figure4-results/**
+figure4b-results/data/**
+figure4a-results/data/**
