@@ -300,8 +300,7 @@ main (int argc, char *argv[])
         Ptr<Node> object = *j;
         Ptr<MobilityModel> mobility = object->GetObject<MobilityModel> ();
         NS_ASSERT (mobility != 0);
-        Vector position = mobility->GetPosition ();
-        
+        Vector position = mobility->GetPosition ();        
 
         Ptr<NetDevice> netDevice = object->GetDevice (0);
         Ptr<LoraNetDevice> loraNetDevice = netDevice->GetObject<LoraNetDevice> ();

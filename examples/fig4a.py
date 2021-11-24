@@ -46,7 +46,7 @@ def runSimulation(runs):
     'nDevices': list(np.logspace(0.0, 3.0, num=50, endpoint=True)),
     'realisticChannelModel': False,
     'radius': 4000,
-    'packetSize': 150
+    'packetSize': 10
     }
     #runs = 20
 

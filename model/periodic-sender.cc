@@ -169,7 +169,7 @@ PeriodicSender::SendPacket (void)
         m_basePktSize = 150;
       }
 
-     //m_basePktSize = 51;
+     m_basePktSize = 10;
 
       packet = Create<Packet> (m_basePktSize);
   }

@@ -23,7 +23,7 @@ def S_psucc(result):
     outcomes = [float(a) for a in result['output']['stdout'].split()]    
     return outcomes[3]
 
-def runSimulation(runs, radius):
+def runSimulation(runs, radius, packetSize):
     print("Begin Figure 4b simulation")
     # Spreading Factor to DataRate mapping
     #  * SF7 -> DR5
@@ -41,14 +41,14 @@ def runSimulation(runs, radius):
     results_dir = 'figure4b-results'
 
     params = {
-    'nDevices': list(np.logspace(0.0, 3.3, num=50, endpoint=True)),
+    'nDevices': list(np.logspace(0.0, 3.0, num=50, endpoint=True)),
     'realisticChannelModel': True,
     'radius': radius,
-    'packetSize': 51
+    'packetSize': packetSize
     }
     #runs = 20
 
-    #print("nDevices:")
+    print("radius: ", np.amax(params['radius']) )
     print("max number of ED: ", np.amax(params['nDevices']) )
     print("min number of ED: ", np.amin(params['nDevices']) )
     print("number of runs/simulation: ", runs )
