@@ -32,7 +32,7 @@
 using namespace ns3;
 using namespace lorawan;
 
-NS_LOG_COMPONENT_DEFINE ("figure5");
+NS_LOG_COMPONENT_DEFINE ("figure4");
 
 // Network settings
 //int nDevices = 5853;
@@ -41,7 +41,7 @@ int nGateways = 1;
 //double radius = 1000;
 double radius = 5000;
 //double simulationTime = 100;
-double simulationTime = 100;
+double simulationTime = 20;
 
 // Channel model
 bool realisticChannelModel = true;
@@ -71,7 +71,7 @@ main (int argc, char *argv[])
 
 
   // Set up logging
-  LogComponentEnable ("figure5", LOG_LEVEL_ALL);
+  LogComponentEnable ("figure4", LOG_LEVEL_ALL);
   // Set up logging
   //LogComponentEnable ("AlohaThroughput", LOG_LEVEL_ALL);
   //LogComponentEnable ("Simulator", LOG_LEVEL_ALL);
@@ -131,7 +131,8 @@ main (int argc, char *argv[])
   // Create the lora channel object
   Ptr<LogDistancePropagationLossModel> loss = CreateObject<LogDistancePropagationLossModel> ();
   loss->SetPathLossExponent (3.76);
-  loss->SetReference (1, 7.7);
+  //loss->SetReference (1, 7.7);
+  loss->SetReference (1, 8.1);
 
   if (realisticChannelModel)
     {
@@ -300,7 +301,8 @@ main (int argc, char *argv[])
         Ptr<Node> object = *j;
         Ptr<MobilityModel> mobility = object->GetObject<MobilityModel> ();
         NS_ASSERT (mobility != 0);
-        Vector position = mobility->GetPosition ();        
+        Vector position = mobility->GetPosition ();
+        
 
         Ptr<NetDevice> netDevice = object->GetDevice (0);
         Ptr<LoraNetDevice> loraNetDevice = netDevice->GetObject<LoraNetDevice> ();

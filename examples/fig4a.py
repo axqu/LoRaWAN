@@ -10,7 +10,7 @@ def G_psucc(result):
     return outcomes[1]
 
 def Stheory_psucc(result):
-    #print(result)
+    print(result)
     outcomes = [float(a) for a in result['output']['stdout'].split()]    
     return outcomes[2]
 
@@ -23,7 +23,7 @@ def clearDatFile():
     file.truncate(0)
     file.close()
 
-def runSimulation(runs):
+def runSimulation(runs, radius, packetSize):
     print("Begin Figure 4a simulation")
     #clearDatFile()
     # Spreading Factor to DataRate mapping
@@ -43,10 +43,10 @@ def runSimulation(runs):
 
 
     params = {
-    'nDevices': list(np.logspace(0.0, 3.0, num=50, endpoint=True)),
+    'nDevices': list(np.logspace(0.0, 3.3, num=50, endpoint=True)),
     'realisticChannelModel': False,
-    'radius': 4000,
-    'packetSize': 10
+    'radius': radius,
+    'packetSize': packetSize
     }
     #runs = 20
 
@@ -73,5 +73,5 @@ def runSimulation(runs):
                                                     runs),
                     axis=-1).squeeze()
 
-    return G,S
+    return G,S,S_theory
 

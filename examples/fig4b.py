@@ -15,7 +15,7 @@ def G_psucc(result):
     return outcomes[1]
 
 def Stheory_psucc(result):
-    print(result)
+    #print(result)
     outcomes = [float(a) for a in result['output']['stdout'].split()]    
     return outcomes[2]
 
@@ -41,7 +41,7 @@ def runSimulation(runs, radius, packetSize):
     results_dir = 'figure4b-results'
 
     params = {
-    'nDevices': list(np.logspace(0.0, 3.0, num=50, endpoint=True)),
+    'nDevices': list(np.logspace(0.0, 3.3, num=50, endpoint=True)),
     'realisticChannelModel': True,
     'radius': radius,
     'packetSize': packetSize

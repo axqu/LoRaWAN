@@ -42,9 +42,9 @@ public:
 
 
 private:
-  Time m_totalDuration;
-  int SF7=0, SF8=0, SF9=0, SF10=0,SF11=0, SF12=0;
-  Time durationSF7, durationSF8, durationSF9, durationSF10, durationSF11, durationSF12;
+  mutable  Time m_totalDuration;
+  mutable int SF7=0, SF8=0, SF9=0, SF10=0,SF11=0, SF12=0;
+  mutable Time durationSF7, durationSF8, durationSF9, durationSF10, durationSF11, durationSF12;
   //mutable Time m_totalDuration;
   //mutable int SF7=0, SF8=0, SF9=0, SF10=0,SF11=0, SF12=0;
   //mutable Time durationSF7, durationSF8, durationSF9, durationSF10, durationSF11, durationSF12;
