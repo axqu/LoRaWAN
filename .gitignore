@@ -2,5 +2,7 @@
 *.dat
 examples/aloha-results/**
 examples/figure4-results/**
+examples/figure4a-results/**
+examples/figure4b-results/**
 figure4b-results/data/**
 figure4a-results/data/**
