@@ -1,6 +1,6 @@
 
 
-#include "/home/steven/Project/ns-3/src/lorawan/model/lora-total-duration.h"
+#include "ns3/lora-total-duration.h"
 #include "ns3/nstime.h"
 
 

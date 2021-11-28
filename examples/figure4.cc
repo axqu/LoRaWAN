@@ -3,7 +3,7 @@
  * devices. The metric of interest for this script is the throughput of the
  * network.
  */
-#include "/home/steven/Project/ns-3/src/lorawan/model/lora-total-duration.h"
+#include "ns3/lora-total-duration.h"
 #include "ns3/end-device-lora-phy.h"
 #include "ns3/gateway-lora-phy.h"
 #include "ns3/end-device-lorawan-mac.h"
