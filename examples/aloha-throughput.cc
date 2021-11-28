@@ -47,8 +47,8 @@ bool realisticChannelModel = false;
 int appPeriodSeconds = simulationTime;
 int transientPeriods = 0;
 
-int packetSize = 0;
-int DR = 0;
+int packetSize = 150;
+int DR = 5;
 
 // Output control
 bool print = false;
