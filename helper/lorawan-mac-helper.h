@@ -41,6 +41,8 @@ public:
    * Define the kind of device. Can be either GW (Gateway) or ED (End Device).
    */
   enum DeviceType { GW, ED_A };
+  //
+  int DCPercentage = 1;
 
   /**
    * Define the operational region.

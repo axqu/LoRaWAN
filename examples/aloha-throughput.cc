@@ -45,6 +45,7 @@ int nDevices = 200;
 int nGateways = 1;
 double radius = 1000;
 double simulationTime = 100;
+int dutyCycle = 1;
 
 // Channel model
 bool realisticChannelModel = false;
@@ -81,6 +82,7 @@ main (int argc, char *argv[])
   cmd.AddValue ("simulationTime", "Simulation Time", simulationTime);
   cmd.AddValue ("interferenceMatrix", "Interference matrix to use [aloha, goursaud]", interferenceMatrix);
   cmd.AddValue ("radius", "Radius of the deployment", radius);
+  cmd.AddValue ("dutyCycle", "Percentage of active duty cycle", dutyCycle);
   cmd.Parse (argc, argv);
 
   int appPeriodSeconds = simulationTime;
@@ -148,6 +150,7 @@ main (int argc, char *argv[])
 
   // Create the LorawanMacHelper
   LorawanMacHelper macHelper = LorawanMacHelper ();
+  macHelper.DCPercentage = dutyCycle;
   macHelper.SetRegion (LorawanMacHelper::ALOHA);
 
   // Create the LoraHelper

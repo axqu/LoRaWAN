@@ -209,7 +209,7 @@ LorawanMacHelper::ApplyCommonAlohaConfigurations (Ptr<LorawanMac> lorawanMac) co
   //////////////
 
   LogicalLoraChannelHelper channelHelper;
-  channelHelper.AddSubBand (868, 868.6, 1, 14);
+  channelHelper.AddSubBand (868, 868.6, DCPercentage, 14);
 
   //////////////////////
   // Default channels //
