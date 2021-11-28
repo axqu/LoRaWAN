@@ -41,7 +41,7 @@ double radius = 6400; //Note that due to model updates, 7500 m is no longer the 
 double simulationTime = 600;
 
 // Channel model
-bool realisticChannelModel = true;
+bool realisticChannelModel = false;
 
 int appPeriodSeconds = 600;
 

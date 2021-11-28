@@ -154,7 +154,7 @@ LogicalLoraChannelHelper::AddSubBand (double firstFrequency,
                                       double lastFrequency, double dutyCycle,
                                       double maxTxPowerDbm)
 {
-  NS_LOG_FUNCTION (this << firstFrequency << lastFrequency << dutyCycle << maxTxPowerDbm);
+  NS_LOG_FUNCTION (this << firstFrequency << lastFrequency);
 
   Ptr<SubBand> subBand = Create<SubBand> (firstFrequency, lastFrequency,
                                           dutyCycle, maxTxPowerDbm);
@@ -260,11 +260,10 @@ LogicalLoraChannelHelper::GetTxPowerForChannel (Ptr<LogicalLoraChannel>
     {
       // Check whether this channel is in this SubBand
       if ((*it)->BelongsToSubBand (logicalChannel->GetFrequency ()))
-       {
+        {
           return (*it)->GetMaxTxPowerDbm ();
-       }
+        }
     }
-
   NS_ABORT_MSG ("Logical channel doesn't belong to a known SubBand");
 
   return 0;

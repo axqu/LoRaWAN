@@ -81,13 +81,7 @@ SimpleEndDeviceLoraPhy::Send (Ptr<Packet> packet, LoraTxParameters txParams,
 
   // Send the packet over the channel
   NS_LOG_INFO ("Sending the packet in the channel");
-  
-  //if(txParams.sf != 12)
-  //{
-     NS_LOG_INFO ("Sending packet");
-    m_channel->Send (this, packet, txPowerDbm, txParams, duration, frequencyMHz);
-  //}
-  
+  m_channel->Send (this, packet, txPowerDbm, txParams, duration, frequencyMHz);
 
   // Schedule the switch back to STANDBY mode.
   // For reference see SX1272 datasheet, section 4.1.6
@@ -121,8 +115,8 @@ SimpleEndDeviceLoraPhy::StartReceive (Ptr<Packet> packet, double rxPowerDbm,
                                       uint8_t sf, Time duration, double frequencyMHz)
 {
 
- //NS_LOG_FUNCTION (this << packet << rxPowerDbm << unsigned (sf) << duration <<
- //                  frequencyMHz);
+  NS_LOG_FUNCTION (this << packet << rxPowerDbm << unsigned (sf) << duration <<
+                   frequencyMHz);
 
   // Notify the LoraInterferenceHelper of the impinging signal, and remember
   // the event it creates. This will be used then to correctly handle the end
@@ -143,17 +137,17 @@ SimpleEndDeviceLoraPhy::StartReceive (Ptr<Packet> packet, double rxPowerDbm,
     // it.
     case SLEEP:
       {
-        //NS_LOG_INFO ("Dropping packet because device is in SLEEP state");
+        NS_LOG_INFO ("Dropping packet because device is in SLEEP state");
         break;
       }
     case TX:
       {
-        //NS_LOG_INFO ("Dropping packet because device is in TX state");
+        NS_LOG_INFO ("Dropping packet because device is in TX state");
         break;
       }
     case RX:
       {
-        //NS_LOG_INFO ("Dropping packet because device is already in RX state");
+        NS_LOG_INFO ("Dropping packet because device is already in RX state");
         break;
       }
     // If we are in STANDBY mode, we can potentially lock on the currently
@@ -176,9 +170,9 @@ SimpleEndDeviceLoraPhy::StartReceive (Ptr<Packet> packet, double rxPowerDbm,
         //////////////////
         if (!IsOnFrequency (frequencyMHz))
           {
-            //NS_LOG_INFO ("Packet lost because it's on frequency " <<
-            //             frequencyMHz << " MHz and we are listening at " <<
-            //             m_frequency << " MHz");
+            NS_LOG_INFO ("Packet lost because it's on frequency " <<
+                         frequencyMHz << " MHz and we are listening at " <<
+                         m_frequency << " MHz");
 
             // Fire the trace source for this event.
             if (m_device)
@@ -197,8 +191,8 @@ SimpleEndDeviceLoraPhy::StartReceive (Ptr<Packet> packet, double rxPowerDbm,
         /////////////////////////
         if (sf != m_sf)
           {
-            //NS_LOG_INFO ("Packet lost because it's using SF" << unsigned(sf) <<
-            //             ", while we are listening for SF" << unsigned(m_sf));
+            NS_LOG_INFO ("Packet lost because it's using SF" << unsigned(sf) <<
+                         ", while we are listening for SF" << unsigned(m_sf));
 
             // Fire the trace source for this event.
             if (m_device)
@@ -217,9 +211,9 @@ SimpleEndDeviceLoraPhy::StartReceive (Ptr<Packet> packet, double rxPowerDbm,
         ////////////////////
         if (rxPowerDbm < sensitivity)
           {
-            //NS_LOG_INFO ("Dropping packet reception of packet with sf = " <<
-             //            unsigned(sf) << " because under the sensitivity of " <<
-             //            sensitivity << " dBm");
+            NS_LOG_INFO ("Dropping packet reception of packet with sf = " <<
+                         unsigned(sf) << " because under the sensitivity of " <<
+                         sensitivity << " dBm");
 
             // Fire the trace source for this event.
             if (m_device)
@@ -243,8 +237,8 @@ SimpleEndDeviceLoraPhy::StartReceive (Ptr<Packet> packet, double rxPowerDbm,
             SwitchToRx ();
 
             // Schedule the end of the reception of the packet
-            //NS_LOG_INFO ("Scheduling reception of a packet. End in " <<
-            //             duration.GetSeconds () << " seconds");
+            NS_LOG_INFO ("Scheduling reception of a packet. End in " <<
+                         duration.GetSeconds () << " seconds");
 
             Simulator::Schedule (duration, &LoraPhy::EndReceive, this, packet,
                                  event);

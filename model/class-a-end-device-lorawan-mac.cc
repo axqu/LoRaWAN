@@ -81,20 +81,14 @@ ClassAEndDeviceLorawanMac::SendToPhy (Ptr<Packet> packetToSend)
 
   NS_LOG_DEBUG ("PacketToSend: " << packetToSend);
 
-  NS_LOG_DEBUG ("m_enableDRAdapt: " << m_enableDRAdapt);
-  NS_LOG_DEBUG ("m_txPower: " << m_txPower);
-
   // Data Rate Adaptation as in LoRaWAN specification, V1.0.2 (2016)
   if (m_enableDRAdapt && (m_dataRate > 0)
       && (m_retxParams.retxLeft < m_maxNumbTx)
       && (m_retxParams.retxLeft % 2 == 0) )
     {
       m_txPower = 14; // Reset transmission power
-      NS_LOG_DEBUG ("here1");
       m_dataRate = m_dataRate - 1;
     }
-
-    NS_LOG_DEBUG ("here2");
 
   // Craft LoraTxParameters object
   LoraTxParameters params;

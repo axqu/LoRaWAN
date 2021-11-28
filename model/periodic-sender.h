@@ -64,9 +64,6 @@ public:
    */
   void SetPacketSizeRandomVariable (Ptr <RandomVariableStream> rv);
 
-
-  void SetRealisticChannelModel (bool val);
-
   /**
    * Send a packet using the LoraNetDevice's Send method
    */
@@ -114,10 +111,6 @@ private:
    */
   Ptr<RandomVariableStream> m_pktSizeRV;
 
-  /**
-   * If using a realisitc channel model
-   */
-  bool m_realisticChannelModel;
 
 };
 

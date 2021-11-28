@@ -33,7 +33,6 @@
 #include "ns3/propagation-delay-model.h"
 #include "ns3/logical-lora-channel.h"
 #include "ns3/packet.h"
-#include "ns3/lora-total-duration.h"
 #include "ns3/nstime.h"
 
 namespace ns3 {
@@ -77,8 +76,6 @@ public:
   // TypeId
   static TypeId GetTypeId (void);
 
-  
-
   // Constructor and destructor
   LoraChannel ();
   virtual ~LoraChannel ();
@@ -116,8 +113,6 @@ public:
     * \param phy The physical layer to remove.
     */
   void Remove (Ptr<LoraPhy> phy);
-
-  Time getTotalDuration(void);
 
   /**
     * Send a packet in the channel.
@@ -158,7 +153,6 @@ public:
   double GetRxPower (double txPowerDbm, Ptr<MobilityModel> senderMobility,
                      Ptr<MobilityModel> receiverMobility) const;
 
-
 private:
   /**
     * Private method that is scheduled by LoraChannel's Send method to happen
@@ -180,7 +174,6 @@ private:
     */
   std::vector<Ptr<LoraPhy> > m_phyList;
 
-
   /**
     * Pointer to the loss model.
     *
@@ -198,11 +191,6 @@ private:
    * Callback for when a packet is being sent on the channel.
    */
   TracedCallback<Ptr<const Packet> > m_packetSent;
-
-  //std::unique_ptr m_ptr = std::make_unique<LoraTotalDuration>();
-  //LoraTotalDuration m_totalDuration;
-  LoraTotalDuration m_totalDuration;
-   
 
 };
 

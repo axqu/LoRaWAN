@@ -112,7 +112,7 @@ EndDeviceLorawanMac::EndDeviceLorawanMac ()
     : m_enableDRAdapt (false),
       m_maxNumbTx (8),
       m_dataRate (0),
-      m_txPower (14), //m_txPower (14),
+      m_txPower (14),
       m_codingRate (1),
       // LoraWAN default
       m_headerDisabled (0),
@@ -221,10 +221,6 @@ EndDeviceLorawanMac::DoSend (Ptr<Packet> packet)
 
       NS_LOG_INFO ("Added frame header of size " << frameHdr.GetSerializedSize () <<
                    " bytes.");
-
-
-      NS_LOG_INFO ("m_maxAppPayloadForDataRate:  " << m_maxAppPayloadForDataRate.at (m_dataRate) );         
-      NS_LOG_INFO ("packet->GetSize ()  " << packet->GetSize () );    
 
       // Check that MACPayload length is below the allowed maximum
       if (packet->GetSize () > m_maxAppPayloadForDataRate.at (m_dataRate))

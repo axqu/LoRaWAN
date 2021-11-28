@@ -26,7 +26,6 @@
 #include "ns3/simulator.h"
 #include "ns3/end-device-lora-phy.h"
 #include "ns3/gateway-lora-phy.h"
-#include "ns3/lora-total-duration.h"
 #include <algorithm>
 
 namespace ns3 {
@@ -106,12 +105,6 @@ LoraChannel::GetDevice (std::size_t i) const
   return m_phyList[i]->GetDevice ()->GetObject<NetDevice> ();
 }
 
-Time
-LoraChannel::getTotalDuration(void)
-{
-  return m_totalDuration.getTotalDuration();
-}
-
 void
 LoraChannel::Send (Ptr< LoraPhy > sender, Ptr< Packet > packet,
                    double txPowerDbm, LoraTxParameters txParams,
@@ -119,8 +112,6 @@ LoraChannel::Send (Ptr< LoraPhy > sender, Ptr< Packet > packet,
 {
   NS_LOG_FUNCTION (this << sender << packet << txPowerDbm << txParams <<
                    duration << frequencyMHz);
-
-  m_totalDuration.UpdateTotalDuration(duration, txParams.sf);
 
   // Get the mobility model of the sender
   Ptr<MobilityModel> senderMobility = sender->GetMobility ()->GetObject<MobilityModel> ();

@@ -117,4 +117,3 @@ Publications:
   networks in a smart city scenario," 2017 IEEE International Conference On
   Communications (ICC), Paris, 2017. [Link](http://ieeexplore.ieee.org/document/7996384/).
 - Network level performances of a LoRa system (Master thesis). [Link](http://tesi.cab.unipd.it/53740/1/dissertation.pdf).
-# lorawan

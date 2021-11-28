@@ -90,7 +90,7 @@ LoraPhy::GetDevice (void) const
 void
 LoraPhy::SetDevice (Ptr<NetDevice> device)
 {
-  //NS_LOG_FUNCTION (this << device);
+  NS_LOG_FUNCTION (this << device);
 
   m_device = device;
 }
@@ -98,7 +98,7 @@ LoraPhy::SetDevice (Ptr<NetDevice> device)
 Ptr<LoraChannel>
 LoraPhy::GetChannel (void) const
 {
-  //NS_LOG_FUNCTION_NOARGS ();
+  NS_LOG_FUNCTION_NOARGS ();
 
   return m_channel;
 }
@@ -106,7 +106,7 @@ LoraPhy::GetChannel (void) const
 Ptr<MobilityModel>
 LoraPhy::GetMobility (void)
 {
-  //NS_LOG_FUNCTION_NOARGS ();
+  NS_LOG_FUNCTION_NOARGS ();
 
   // If there is a mobility model associated to this PHY, take the mobility from
   // there
@@ -123,7 +123,7 @@ LoraPhy::GetMobility (void)
 void
 LoraPhy::SetMobility (Ptr<MobilityModel> mobility)
 {
-  //NS_LOG_FUNCTION_NOARGS ();
+  NS_LOG_FUNCTION_NOARGS ();
 
   m_mobility = mobility;
 }
@@ -131,7 +131,7 @@ LoraPhy::SetMobility (Ptr<MobilityModel> mobility)
 void
 LoraPhy::SetChannel (Ptr<LoraChannel> channel)
 {
-  //NS_LOG_FUNCTION (this << channel);
+  NS_LOG_FUNCTION (this << channel);
 
   m_channel = channel;
 }
@@ -164,7 +164,7 @@ Time
 LoraPhy::GetOnAirTime (Ptr<Packet> packet, LoraTxParameters txParams)
 {
 
-  //NS_LOG_FUNCTION (packet << txParams);
+  NS_LOG_FUNCTION (packet << txParams);
 
   // The contents of this function are based on [1].
   // [1] SX1272 LoRa modem designer's guide.
@@ -178,7 +178,7 @@ LoraPhy::GetOnAirTime (Ptr<Packet> packet, LoraTxParameters txParams)
 
   // Payload size
   uint32_t pl = packet->GetSize ();      // Size in bytes
-  //NS_LOG_DEBUG ("Packet of size " << pl << " bytes");
+  NS_LOG_DEBUG ("Packet of size " << pl << " bytes");
 
   // This step is needed since the formula deals with double values.
   // de = 1 when the low data rate optimization is enabled, 0 otherwise
@@ -196,18 +196,12 @@ LoraPhy::GetOnAirTime (Ptr<Packet> packet, LoraTxParameters txParams)
   // Time to transmit the payload
   double tPayload = payloadSymbNb * tSym;
 
-  //double spreadfactor = txParams.sf;
-
-  //NS_LOG_DEBUG ("Total time = " << tPreamble + tPayload);
-  //NS_LOG_DEBUG ("" << spreadfactor);
-/*
   NS_LOG_DEBUG ("Time computation: num = " << num << ", den = " << den <<
                 ", payloadSymbNb = " << payloadSymbNb << ", tSym = " << tSym);
-  NS_LOG_DEBUG ("txParams.sf = " << spreadfactor);
   NS_LOG_DEBUG ("tPreamble = " << tPreamble);
   NS_LOG_DEBUG ("tPayload = " << tPayload);
   NS_LOG_DEBUG ("Total time = " << tPreamble + tPayload);
-*/
+
   // Compute and return the total packet on-air time
   return Seconds (tPreamble + tPayload);
 }

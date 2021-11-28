@@ -12,7 +12,6 @@ def build(bld):
                                                'point-to-point', 'energy',
                                                'buildings'])
     module.source = [
-        'model/lora-total-duration.cc',
         'model/lora-net-device.cc',
         'model/lorawan-mac.cc',
         'model/lora-phy.cc',
@@ -74,7 +73,6 @@ def build(bld):
     headers = bld(features='ns3header')
     headers.module = 'lorawan'
     headers.source = [
-        'model/lora-total-duration.h',
         'model/lora-net-device.h',
         'model/lorawan-mac.h',
         'model/lora-phy.h',

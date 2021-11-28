@@ -88,7 +88,6 @@ public:
   void UnderSensitivityCallback (Ptr<Packet const> packet, uint32_t systemId);
   void LostBecauseTxCallback (Ptr<Packet const> packet, uint32_t systemId);
 
-
   /////////////////////////
   // MAC layer callbacks //
   /////////////////////////

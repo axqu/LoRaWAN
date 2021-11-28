@@ -279,7 +279,6 @@ LoraPacketTracker::CountPhyPacketsPerGw (Time startTime, Time stopTime,
 
   return packetCounts;
 }
-
 std::string
 LoraPacketTracker::PrintPhyPacketsPerGw (Time startTime, Time stopTime,
                                          int gwId)

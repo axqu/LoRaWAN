@@ -24,8 +24,6 @@
 #include "ns3/double.h"
 #include "ns3/string.h"
 #include "ns3/lora-net-device.h"
-#include "ns3/end-device-lora-phy.h"
-#include "ns3/class-a-end-device-lorawan-mac.h"
 
 namespace ns3 {
 namespace lorawan {
@@ -57,8 +55,7 @@ PeriodicSender::PeriodicSender ()
   : m_interval (Seconds (10)),
   m_initialDelay (Seconds (1)),
   m_basePktSize (10),
-  m_pktSizeRV (0),
-  m_realisticChannelModel(true)
+  m_pktSizeRV (0)
 
 {
   NS_LOG_FUNCTION_NOARGS ();
@@ -104,92 +101,25 @@ PeriodicSender::SetPacketSize (uint8_t size)
   m_basePktSize = size;
 }
 
-void
-PeriodicSender::SetRealisticChannelModel (bool val)
-{
-  m_realisticChannelModel = val;
-}
 
 void
 PeriodicSender::SendPacket (void)
 {
   NS_LOG_FUNCTION (this);
 
-      Ptr<LoraNetDevice> loraNetDevice = m_node->GetDevice (0)->GetObject<LoraNetDevice> ();
-      //NS_ASSERT (loraNetDevice != 0);
-      Ptr<ClassAEndDeviceLorawanMac> mac =
-          loraNetDevice->GetMac ()->GetObject<ClassAEndDeviceLorawanMac> ();
-    NS_ASSERT (mac != 0);
-
-  //std::cout << "GetDataRate(): " << unsigned(mac -> GetDataRate()) << " ";
-
-  uint8_t data_rate = mac -> GetDataRate();
-  //uint8_t header_size = 8;
-  //uint8_t ratio = 150/230;
-
+  // Create and send a new packet
   Ptr<Packet> packet;
-
- /* 
- Data Rate -> Max Packet size (minus header size of 8)
- 0 -> 51
- 1 -> 51
- 2 -> 51
- 3 -> 115
- 4 -> 222
- 5 -> 222
- */
-  if(m_realisticChannelModel)
-  {
-      if(data_rate == 5)
-      {
-        m_basePktSize = 222;
-      }
-      else if(data_rate == 4)
-      {
-        m_basePktSize = 222;
-      }
-      else if(data_rate == 3)
-      {
-        m_basePktSize = 115;
-      }
-      else if(data_rate == 2)
-      {
-        m_basePktSize = 51;
-      }
-      else if(data_rate == 1)
-      {
-        m_basePktSize = 51;
-      }
-      else if(data_rate == 0)
-      {
-        m_basePktSize = 51;
-      }
-      else
-      {
-        m_basePktSize = 150;
-      }
-
-     m_basePktSize = 10;
-
-      packet = Create<Packet> (m_basePktSize);
-  }
+  if (m_pktSizeRV)
+    {
+      int randomsize = m_pktSizeRV->GetInteger ();
+      packet = Create<Packet> (m_basePktSize + randomsize);
+    }
   else
-  {
-        // Create and send a new packet
-
-      if (m_pktSizeRV)
-        {
-          int randomsize = m_pktSizeRV->GetInteger ();
-          packet = Create<Packet> (m_basePktSize + randomsize);
-        }
-      else
-        {
-          packet = Create<Packet> (m_basePktSize);
-        }
-    
-  }
-
+    {
+      packet = Create<Packet> (m_basePktSize);
+    }
   m_mac->Send (packet);
+
   // Schedule the next SendPacket event
   m_sendEvent = Simulator::Schedule (m_interval, &PeriodicSender::SendPacket,
                                      this);
