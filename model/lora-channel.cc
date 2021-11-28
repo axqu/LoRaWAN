@@ -106,7 +106,7 @@ LoraChannel::GetDevice (std::size_t i) const
   return m_phyList[i]->GetDevice ()->GetObject<NetDevice> ();
 }
 
-Time
+std::vector<Time>
 LoraChannel::getTotalDuration(void)
 {
   return m_totalDuration.getTotalDuration();
@@ -120,7 +120,8 @@ LoraChannel::Send (Ptr< LoraPhy > sender, Ptr< Packet > packet,
   NS_LOG_FUNCTION (this << sender << packet << txPowerDbm << txParams <<
                    duration << frequencyMHz);
 
-  m_totalDuration.UpdateTotalDuration(duration, txParams.sf);
+  uint8_t temp = txParams.sf;
+  m_totalDuration.UpdateTotalDuration(duration, temp);
 
   // Get the mobility model of the sender
   Ptr<MobilityModel> senderMobility = sender->GetMobility ()->GetObject<MobilityModel> ();

@@ -383,7 +383,7 @@ main (int argc, char *argv[])
 */
   //Time t = channel -> getTotalDuration();
 
-  double t = channel -> getTotalDuration().GetSeconds();
+  double t = channel -> getTotalDuration().at(0).GetSeconds();
   
   //double G = nDevices * (0.256256/simulationTime);
   double G = t / simulationTime;

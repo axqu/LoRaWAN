@@ -117,7 +117,7 @@ public:
     */
   void Remove (Ptr<LoraPhy> phy);
 
-  Time getTotalDuration(void);
+  std::vector<Time> getTotalDuration(void);  
 
   /**
     * Send a packet in the channel.
@@ -180,6 +180,8 @@ private:
     */
   std::vector<Ptr<LoraPhy> > m_phyList;
 
+  LoraTotalDuration m_totalDuration;
+
 
   /**
     * Pointer to the loss model.
@@ -201,7 +203,7 @@ private:
 
   //std::unique_ptr m_ptr = std::make_unique<LoraTotalDuration>();
   //LoraTotalDuration m_totalDuration;
-  LoraTotalDuration m_totalDuration;
+  //LoraTotalDuration m_totalDuration;
    
 
 };
