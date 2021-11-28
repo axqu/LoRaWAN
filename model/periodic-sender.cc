@@ -154,7 +154,7 @@ PeriodicSender::SendPacket (void)
     m_basePktSize = 150;
   }
 
-  m_basePktSize = 51;
+  m_basePktSize = 10;
 
   //std::cout << "m_basePktSize: " << unsigned(m_basePktSize)  << std::endl;
   Ptr<Packet> packet;

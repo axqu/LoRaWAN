@@ -39,19 +39,23 @@ NS_LOG_COMPONENT_DEFINE ("figure5");
 int nDevices = 200;
 int nGateways = 1;
 //double radius = 1000;
-double radius = 1000;
-double simulationTime = 100;
+double radius = 5000;
+//double simulationTime = 100;
+double simulationTime = 20;
 
 // Channel model
 bool realisticChannelModel = true;
+bool includeBuildings = false;
+
+// Output control
+bool print = true;
 
 int appPeriodSeconds = simulationTime;
 int transientPeriods = 0;
 
-int packetSize = 23;
+int packetSize = 150;
 
-// Output control
-bool print = false;
+
 
 int
 main (int argc, char *argv[])
@@ -59,8 +63,9 @@ main (int argc, char *argv[])
 
   CommandLine cmd;
   cmd.AddValue ("nDevices", "Number of end devices to include in the simulation", nDevices);
-  //cmd.AddValue ("DR", "Data Rate", DR);
-  //cmd.AddValue ("packetSize", "Packet Size", packetSize);
+  cmd.AddValue ("realisticChannelModel", "realisticChannelModel", realisticChannelModel);
+  cmd.AddValue ("radius", "radius", radius);
+  cmd.AddValue ("packetSize", "packetSize", packetSize);
   cmd.Parse (argc, argv);
 
 
@@ -96,10 +101,15 @@ main (int argc, char *argv[])
 
 
   // Default matrix is goursaud
-  //Config::SetDefault ("ns3::EndDeviceLorawanMac::DataRate", UintegerValue (5));
-
- //LoraInterferenceHelper::collisionMatrix = LoraInterferenceHelper::ALOHA;
- LoraInterferenceHelper::collisionMatrix = LoraInterferenceHelper::GOURSAUD;
+  if (realisticChannelModel)
+  {      
+    LoraInterferenceHelper::collisionMatrix = LoraInterferenceHelper::GOURSAUD;
+  }
+  else
+  {
+    Config::SetDefault ("ns3::EndDeviceLorawanMac::DataRate", UintegerValue (5));
+    LoraInterferenceHelper::collisionMatrix = LoraInterferenceHelper::ALOHA;
+  }
 
   /***********
    *  Setup  *
@@ -121,7 +131,8 @@ main (int argc, char *argv[])
   // Create the lora channel object
   Ptr<LogDistancePropagationLossModel> loss = CreateObject<LogDistancePropagationLossModel> ();
   loss->SetPathLossExponent (3.76);
-  loss->SetReference (1, 7.7);
+  //loss->SetReference (1, 7.7);
+  loss->SetReference (1, 8.1);
 
   if (realisticChannelModel)
     {
@@ -218,7 +229,6 @@ main (int argc, char *argv[])
   Ptr<ListPositionAllocator> allocator = CreateObject<ListPositionAllocator> ();
   // Make it so that nodes are at a certain height > 0
  allocator->Add (Vector (0.0, 0.0, 15.0));
-  //allocator->Add (Vector (0.0, 0.0, 50.0));
   mobility.SetPositionAllocator (allocator);
   mobility.Install (gateways);
 
@@ -227,84 +237,86 @@ main (int argc, char *argv[])
   macHelper.SetDeviceType (LorawanMacHelper::GW);
   helper.Install (phyHelper, macHelper, gateways);
 
- 
-
-
   /**********************
    *  Handle buildings  *
    **********************/
 
-  double xLength = 130;
-  double deltaX = 32;
-  double yLength = 64;
-  double deltaY = 17;
-  int gridWidth = 2 * radius / (xLength + deltaX);
-  int gridHeight = 2 * radius / (yLength + deltaY);
-  if (realisticChannelModel == false)
-    {
-      gridWidth = 0;
-      gridHeight = 0;
-    }
-  Ptr<GridBuildingAllocator> gridBuildingAllocator;
-  gridBuildingAllocator = CreateObject<GridBuildingAllocator> ();
-  gridBuildingAllocator->SetAttribute ("GridWidth", UintegerValue (gridWidth));
-  gridBuildingAllocator->SetAttribute ("LengthX", DoubleValue (xLength));
-  gridBuildingAllocator->SetAttribute ("LengthY", DoubleValue (yLength));
-  gridBuildingAllocator->SetAttribute ("DeltaX", DoubleValue (deltaX));
-  gridBuildingAllocator->SetAttribute ("DeltaY", DoubleValue (deltaY));
-  gridBuildingAllocator->SetAttribute ("Height", DoubleValue (6));
-  gridBuildingAllocator->SetBuildingAttribute ("NRoomsX", UintegerValue (2));
-  gridBuildingAllocator->SetBuildingAttribute ("NRoomsY", UintegerValue (4));
-  gridBuildingAllocator->SetBuildingAttribute ("NFloors", UintegerValue (2));
-  gridBuildingAllocator->SetAttribute (
-      "MinX", DoubleValue (-gridWidth * (xLength + deltaX) / 2 + deltaX / 2));
-  gridBuildingAllocator->SetAttribute (
-      "MinY", DoubleValue (-gridHeight * (yLength + deltaY) / 2 + deltaY / 2));
-  BuildingContainer bContainer = gridBuildingAllocator->Create (gridWidth * gridHeight);
+      double xLength = 130;
+      double deltaX = 32;
+      double yLength = 64;
+      double deltaY = 17;
+      int gridWidth = 2 * radius / (xLength + deltaX);
+      int gridHeight = 2 * radius / (yLength + deltaY);
+      //if (realisticChannelModel == false)
+      if (includeBuildings == false)
+        {
+          gridWidth = 0;
+          gridHeight = 0;
+        }
+      Ptr<GridBuildingAllocator> gridBuildingAllocator;
+      gridBuildingAllocator = CreateObject<GridBuildingAllocator> ();
+      gridBuildingAllocator->SetAttribute ("GridWidth", UintegerValue (gridWidth));
+      gridBuildingAllocator->SetAttribute ("LengthX", DoubleValue (xLength));
+      gridBuildingAllocator->SetAttribute ("LengthY", DoubleValue (yLength));
+      gridBuildingAllocator->SetAttribute ("DeltaX", DoubleValue (deltaX));
+      gridBuildingAllocator->SetAttribute ("DeltaY", DoubleValue (deltaY));
+      gridBuildingAllocator->SetAttribute ("Height", DoubleValue (6));
+      gridBuildingAllocator->SetBuildingAttribute ("NRoomsX", UintegerValue (2));
+      gridBuildingAllocator->SetBuildingAttribute ("NRoomsY", UintegerValue (4));
+      gridBuildingAllocator->SetBuildingAttribute ("NFloors", UintegerValue (2));
+      gridBuildingAllocator->SetAttribute (
+          "MinX", DoubleValue (-gridWidth * (xLength + deltaX) / 2 + deltaX / 2));
+      gridBuildingAllocator->SetAttribute (
+          "MinY", DoubleValue (-gridHeight * (yLength + deltaY) / 2 + deltaY / 2));
+      BuildingContainer bContainer = gridBuildingAllocator->Create (gridWidth * gridHeight);
 
-  BuildingsHelper::Install (endDevices);
-  BuildingsHelper::Install (gateways);
-
-
- 
-
+      BuildingsHelper::Install (endDevices);
+      BuildingsHelper::Install (gateways);
 
   /**********************************************
    *  Set up the end device's spreading factor  *
    **********************************************/
-   
-  std::vector<int> sfQuantity (6);
-  sfQuantity = macHelper.SetSpreadingFactorsUp (endDevices, gateways, channel);
+  if (realisticChannelModel)
+  {
+    std::vector<int> sfQuantity (6);
+    sfQuantity = macHelper.SetSpreadingFactorsUp (endDevices, gateways, channel);
+
+    std::string output ("");
+    for (int i = 0; i < 6; ++i)
+    {
+      output += std::to_string (sfQuantity.at (i)) + " ";
+    }
+    //std::cout << "output results: " << output << std::endl;
+  }
+
 
   if (print)
-    {
-      std::ofstream myfile;
-      myfile.open ("/home/steven/Project/ns-3/src/lorawan/examples/endDevices.dat");
-      std::vector<Ptr<Building>>::const_iterator it;
+  {
+    std::ofstream myfile;
+    myfile.open ("/home/steven/Project/ns-3/src/lorawan/examples/endDevices.dat");
+    std::vector<Ptr<Node>>::const_iterator it;
       for (NodeContainer::Iterator j = endDevices.Begin (); j != endDevices.End (); ++j)
-        {
-          
-          Ptr<Node> object = *j;
-          Ptr<MobilityModel> mobility = object->GetObject<MobilityModel> ();
-          NS_ASSERT (mobility != 0);
-          Vector position = mobility->GetPosition ();
-          
+      {
+        
+        Ptr<Node> object = *j;
+        Ptr<MobilityModel> mobility = object->GetObject<MobilityModel> ();
+        NS_ASSERT (mobility != 0);
+        Vector position = mobility->GetPosition ();
+        
 
-          Ptr<NetDevice> netDevice = object->GetDevice (0);
-          Ptr<LoraNetDevice> loraNetDevice = netDevice->GetObject<LoraNetDevice> ();
-          NS_ASSERT (loraNetDevice != 0);
+        Ptr<NetDevice> netDevice = object->GetDevice (0);
+        Ptr<LoraNetDevice> loraNetDevice = netDevice->GetObject<LoraNetDevice> ();
+        NS_ASSERT (loraNetDevice != 0);
 
-          Ptr<EndDeviceLorawanMac> mac = loraNetDevice->GetMac ()->GetObject<EndDeviceLorawanMac> ();
-          int sf = int(mac->GetDataRate ());
+        Ptr<EndDeviceLorawanMac> mac = loraNetDevice->GetMac ()->GetObject<EndDeviceLorawanMac> ();
+        int sf = int(mac->GetDataRate ());
 
-          myfile << position.x << " " << position.y  << " " << sf << std::endl;
+        myfile << position.x << " " << position.y  << " " << sf << std::endl;
 
-        }
+      }
 
-      myfile.close ();
-    }
-
-
+    myfile.close ();
+  }
   NS_LOG_DEBUG ("Completed configuration");
 
   /*********************************************
@@ -316,6 +328,7 @@ main (int argc, char *argv[])
   appHelper.SetPeriod (Seconds (appPeriodSeconds));
   //appHelper.SetPacketSize (150);
   appHelper.SetPacketSize (packetSize);
+  //appHelper.SetRealisticChannelModel (realisticChannelModel);
   Ptr<RandomVariableStream> rv = CreateObjectWithAttributes<UniformRandomVariable> (
       "Min", DoubleValue (0), "Max", DoubleValue (10));
   ApplicationContainer appContainer = appHelper.Install (endDevices);
@@ -361,13 +374,13 @@ main (int argc, char *argv[])
 
   std::vector<int> packetresults (6);
   packetresults = tracker.CountPhyPacketsPerGw(Seconds (0), appStopTime + Hours (1), nDevices);
-
+/*
     std::string output ("");
     for (int i = 0; i < 6; ++i)
     {
       output += std::to_string (packetresults.at (i)) + " ";
     }
-
+*/
   //Time t = channel -> getTotalDuration();
 
   double t = channel -> getTotalDuration().GetSeconds();
@@ -380,7 +393,7 @@ main (int argc, char *argv[])
   //double G =  t.GetSeconds() / simulationTime;
   //S = G * (number of packets recieved at GW / number of packets sent)
   double S = G * packetresults.at (1) / packetresults.at (0);
-  double S_theory = G * exp(-2*G) ;
+  double S_theory = G * exp(-2*G);
   
   //std::cout << "output results: " << output << "  total duration: " << t << std::endl;
   std::cout << nDevices ;
