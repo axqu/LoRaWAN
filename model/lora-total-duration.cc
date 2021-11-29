@@ -10,7 +10,9 @@ namespace lorawan {
 
 LoraTotalDuration::LoraTotalDuration ()
 {
-  m_packetTimes = { NanoSeconds(0), NanoSeconds(0), NanoSeconds(0), NanoSeconds(0), NanoSeconds(0), NanoSeconds(0)};
+  m_packetTimes = { NanoSeconds(0), NanoSeconds(0), \
+                    NanoSeconds(0), NanoSeconds(0), \
+                    NanoSeconds(0), NanoSeconds(0)};
 };
 
 LoraTotalDuration::~LoraTotalDuration (){};
