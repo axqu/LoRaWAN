@@ -21,10 +21,12 @@ campaign.run_missing_simulations(params, runs)
 example_result = campaign.db.get_complete_results()[0]
 
 
+
 def get_psucc(result):
     """
     Extract the probability of success from the simulation output
     """
+    print(result)
     outcomes = [float(a) for a in result['output']['stdout'].split()]
     return outcomes[1]/outcomes[0]
 
